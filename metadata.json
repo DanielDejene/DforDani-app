@@ -1,0 +1,6 @@
+{
+  "name": "DforDani",
+  "description": "A focused dry-bulk grain provider consignment and invoice tracking system for grain silos and warehouses.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

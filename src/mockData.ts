@@ -1,0 +1,445 @@
+/**
+ * @license
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+import { Product, PurchaseTransaction, SaleTransaction, FinanceRecord, Account, ProviderDeposit } from './types';
+
+export const INITIAL_PRODUCTS: Product[] = [
+  {
+    id: 'prod-1',
+    name: 'Waliya',
+    sku: 'WALI-G01',
+    category: 'Grains',
+    quantity: 120, // in kuntal
+    reorderLevel: 30,
+    location: 'Silo A, Bay 1',
+    unitCost: 85.0, // per kuntal
+    unitPrice: 110.0, // per kuntal
+    description: 'Waliya high grade brewing barley.',
+  },
+  {
+    id: 'prod-2',
+    name: 'Evoniy',
+    sku: 'EVON-G02',
+    category: 'Grains',
+    quantity: 45, // in kuntal
+    reorderLevel: 50, // triggers reorder warning!
+    location: 'Silo A, Bay 2',
+    unitCost: 120.0,
+    unitPrice: 155.0,
+    description: 'Evoniy premium grain seed.',
+  },
+  {
+    id: 'prod-3',
+    name: 'Atar',
+    sku: 'ATAR-G03',
+    category: 'Grains',
+    quantity: 250, // in kuntal
+    reorderLevel: 80,
+    location: 'Warehouse B, Section 1',
+    unitCost: 70.0,
+    unitPrice: 95.0,
+    description: 'Atar field pea grain.',
+  },
+  {
+    id: 'prod-4',
+    name: 'Bakela',
+    sku: 'BAKE-G04',
+    category: 'Grains',
+    quantity: 90, // in kuntal
+    reorderLevel: 40,
+    location: 'Warehouse B, Section 2',
+    unitCost: 95.0,
+    unitPrice: 130.0,
+    description: 'Bakela broad bean.',
+  },
+  {
+    id: 'prod-5',
+    name: 'Sinde',
+    sku: 'SIND-G05',
+    category: 'Grains',
+    quantity: 350, // in kuntal
+    reorderLevel: 100,
+    location: 'Silo C, Main Dome',
+    unitCost: 75.0,
+    unitPrice: 105.0,
+    description: 'Sinde premium quality wheat.',
+  },
+  {
+    id: 'prod-6',
+    name: 'Ashile',
+    sku: 'ASHI-G06',
+    category: 'Grains',
+    quantity: 110, // in kuntal
+    reorderLevel: 50,
+    location: 'Warehouse C, Section 1',
+    unitCost: 115.0,
+    unitPrice: 145.0,
+    description: 'Ashile specialty grain variety.',
+  },
+];
+
+export const INITIAL_ACCOUNTS: Account[] = [
+  { id: 'acc-1', name: 'Cash / Wallet', balance: 14500.0, color: 'emerald' },
+  { id: 'acc-2', name: 'Checking Account', balance: 148500.32, color: 'blue' },
+  { id: 'acc-3', name: 'Credit Card (Visa)', balance: -2800.15, color: 'rose' },
+];
+
+export const INITIAL_PURCHASES: PurchaseTransaction[] = [
+  {
+    id: 'pur-1',
+    productId: 'prod-1',
+    productName: 'Waliya',
+    quantity: 150, // kuntal
+    unitCost: 85.0,
+    totalCost: 12750.0,
+    date: '2026-04-10',
+    supplier: 'Asella Agricultural Cooperative',
+    status: 'Received',
+    paymentAccount: 'acc-2',
+  },
+  {
+    id: 'pur-2',
+    productId: 'prod-2',
+    productName: 'Evoniy',
+    quantity: 100,
+    unitCost: 120.0,
+    totalCost: 12000.0,
+    date: '2026-04-15',
+    supplier: 'Bale Grain Union',
+    status: 'Received',
+    paymentAccount: 'acc-2',
+  },
+  {
+    id: 'pur-3',
+    productId: 'prod-5',
+    productName: 'Sinde',
+    quantity: 300,
+    unitCost: 75.0,
+    totalCost: 22500.0,
+    date: '2026-05-02',
+    supplier: 'Arsi Highlands Supplier',
+    status: 'Received',
+    paymentAccount: 'acc-2',
+  },
+  {
+    id: 'pur-4',
+    productId: 'prod-4',
+    productName: 'Bakela',
+    quantity: 50,
+    unitCost: 95.0,
+    totalCost: 4750.0,
+    date: '2026-05-15',
+    supplier: 'Gonder Farmers Cooperative',
+    status: 'Received',
+    paymentAccount: 'acc-1',
+  },
+  {
+    id: 'pur-5',
+    productId: 'prod-6',
+    productName: 'Ashile',
+    quantity: 80,
+    unitCost: 115.0,
+    totalCost: 9200.0,
+    date: '2026-05-25',
+    supplier: 'Debre Birhan Seeds',
+    status: 'Received',
+    paymentAccount: 'acc-2',
+  },
+];
+
+export const INITIAL_SALES: SaleTransaction[] = [
+  {
+    id: 'sal-1',
+    productId: 'prod-1',
+    productName: 'Waliya',
+    quantity: 30, // kuntal
+    unitPrice: 110.0,
+    totalRevenue: 3300.0,
+    date: '2026-04-22',
+    customer: 'Habesha Brewery Sh. Co.',
+    profit: 750.0, // 3300 - (85 * 30) = 750
+    paymentAccount: 'acc-2',
+  },
+  {
+    id: 'sal-2',
+    productId: 'prod-2',
+    productName: 'Evoniy',
+    quantity: 40,
+    unitPrice: 155.0,
+    totalRevenue: 6200.0,
+    date: '2026-04-28',
+    customer: 'Nekemte Flour Mills',
+    profit: 1400.0, // 6200 - (120 * 40)
+    paymentAccount: 'acc-2',
+  },
+  {
+    id: 'sal-3',
+    productId: 'prod-5',
+    productName: 'Sinde',
+    quantity: 120,
+    unitPrice: 105.0,
+    totalRevenue: 12600.0,
+    date: '2026-05-10',
+    customer: 'Kaliti Food Share Company',
+    profit: 3600.0, // 12600 - (75 * 120)
+    paymentAccount: 'acc-1',
+  },
+  {
+    id: 'sal-4',
+    productId: 'prod-4',
+    productName: 'Bakela',
+    quantity: 15,
+    unitPrice: 130.0,
+    totalRevenue: 1950.0,
+    date: '2026-05-20',
+    customer: 'Dire Dawa Wholesalers',
+    profit: 525.0, // 1950 - (95 * 15)
+    paymentAccount: 'acc-2',
+  },
+  {
+    id: 'sal-5',
+    productId: 'prod-6',
+    productName: 'Ashile',
+    quantity: 20,
+    unitPrice: 145.0,
+    totalRevenue: 2900.0,
+    date: '2026-05-28',
+    customer: 'East Africa Agri Trade',
+    profit: 600.0, // 2900 - (115 * 20)
+    paymentAccount: 'acc-1',
+  },
+  {
+    id: 'sal-6',
+    productId: 'prod-2',
+    productName: 'Evoniy',
+    quantity: 15,
+    unitPrice: 155.0,
+    totalRevenue: 2325.0,
+    date: '2026-06-05',
+    customer: 'Ambo Food Distributors',
+    profit: 525.0,
+    paymentAccount: 'acc-2',
+  },
+];
+
+export const INITIAL_FINANCE_RECORDS: FinanceRecord[] = [
+  {
+    id: 'fin-salary-april',
+    type: 'income',
+    category: 'Salary/Freelance',
+    amount: 12000.0,
+    date: '2026-04-01',
+    description: 'Harvest Sales Base Retainer',
+    account: 'acc-2',
+  },
+  {
+    id: 'fin-rent-april',
+    type: 'expense',
+    category: 'Rent',
+    amount: 4000.0,
+    date: '2026-04-02',
+    description: 'Silo Storage Facilities Rental',
+    account: 'acc-2',
+  },
+  {
+    id: 'fin-util-april',
+    type: 'expense',
+    category: 'Utilities',
+    amount: 850.0,
+    date: '2026-04-05',
+    description: 'Irrigation & Silo Vent Power Grid',
+    account: 'acc-3',
+  },
+  {
+    id: 'fin-salary-may',
+    type: 'income',
+    category: 'Salary/Freelance',
+    amount: 12000.0,
+    date: '2026-05-01',
+    description: 'Harvest Sales Base Retainer',
+    account: 'acc-2',
+  },
+  {
+    id: 'fin-rent-may',
+    type: 'expense',
+    category: 'Rent',
+    amount: 4000.0,
+    date: '2026-05-02',
+    description: 'Silo Storage Facilities Rental',
+    account: 'acc-2',
+  },
+  {
+    id: 'fin-util-may',
+    type: 'expense',
+    category: 'Utilities',
+    amount: 920.0,
+    date: '2026-05-06',
+    description: 'Irrigation & Silo Vent Power Grid',
+    account: 'acc-3',
+  },
+  {
+    id: 'fin-salary-june',
+    type: 'income',
+    category: 'Salary/Freelance',
+    amount: 15000.0,
+    date: '2026-06-01',
+    description: 'Mid-Year Agricultural Bonus & Subsidy Payout',
+    account: 'acc-2',
+  },
+  {
+    id: 'fin-rent-june',
+    type: 'expense',
+    category: 'Rent',
+    amount: 4000.0,
+    date: '2026-06-02',
+    description: 'Silo Storage Facilities Rental',
+    account: 'acc-2',
+  },
+
+  // Linked purchases:
+  {
+    id: 'fin-l-pur-1',
+    type: 'expense',
+    category: 'Inventory Purchase',
+    amount: 12750.0,
+    date: '2026-04-10',
+    description: 'Purchase: 150x Waliya Sourcing',
+    linkedId: 'pur-1',
+    account: 'acc-2',
+  },
+  {
+    id: 'fin-l-pur-2',
+    type: 'expense',
+    category: 'Inventory Purchase',
+    amount: 12000.0,
+    date: '2026-04-15',
+    description: 'Purchase: 100x Evoniy Sourcing',
+    linkedId: 'pur-2',
+    account: 'acc-2',
+  },
+  {
+    id: 'fin-l-pur-3',
+    type: 'expense',
+    category: 'Inventory Purchase',
+    amount: 22500.0,
+    date: '2026-05-02',
+    description: 'Purchase: 300x Sinde Sourcing',
+    linkedId: 'pur-3',
+    account: 'acc-2',
+  },
+  {
+    id: 'fin-l-pur-4',
+    type: 'expense',
+    category: 'Inventory Purchase',
+    amount: 4750.0,
+    date: '2026-05-15',
+    description: 'Purchase: 50x Bakela Sourcing',
+    linkedId: 'pur-4',
+    account: 'acc-1',
+  },
+  {
+    id: 'fin-l-pur-5',
+    type: 'expense',
+    category: 'Inventory Purchase',
+    amount: 9200.0,
+    date: '2026-05-25',
+    description: 'Purchase: 80x Ashile Sourcing',
+    linkedId: 'pur-5',
+    account: 'acc-2',
+  },
+
+  // Linked sales:
+  {
+    id: 'fin-l-sal-1',
+    type: 'income',
+    category: 'Inventory Sale',
+    amount: 3300.0,
+    date: '2026-04-22',
+    description: 'Sold: 30x Waliya',
+    linkedId: 'sal-1',
+    account: 'acc-2',
+  },
+  {
+    id: 'fin-l-sal-2',
+    type: 'income',
+    category: 'Inventory Sale',
+    amount: 6200.0,
+    date: '2026-04-28',
+    description: 'Sold: 40x Evoniy',
+    linkedId: 'sal-2',
+    account: 'acc-2',
+  },
+  {
+    id: 'fin-l-sal-3',
+    type: 'income',
+    category: 'Inventory Sale',
+    amount: 12600.0,
+    date: '2026-05-10',
+    description: 'Sold: 120x Sinde',
+    linkedId: 'sal-3',
+    account: 'acc-1',
+  },
+  {
+    id: 'fin-l-sal-4',
+    type: 'income',
+    category: 'Inventory Sale',
+    amount: 1950.0,
+    date: '2026-05-20',
+    description: 'Sold: 15x Bakela',
+    linkedId: 'sal-4',
+    account: 'acc-2',
+  },
+  {
+    id: 'fin-l-sal-5',
+    type: 'income',
+    category: 'Inventory Sale',
+    amount: 2900.0,
+    date: '2026-05-28',
+    description: 'Sold: 20x Ashile',
+    linkedId: 'sal-5',
+    account: 'acc-1',
+  },
+  {
+    id: 'fin-l-sal-6',
+    type: 'income',
+    category: 'Inventory Sale',
+    amount: 2325.0,
+    date: '2026-06-05',
+    description: 'Sold: 15x Evoniy',
+    linkedId: 'sal-6',
+    account: 'acc-2',
+  },
+];
+
+export const INITIAL_PROVIDER_DEPOSITS: ProviderDeposit[] = [
+  {
+    id: 'prov-dep-1',
+    providerName: 'Abay Agro-Cooperative',
+    grainType: 'Waliya',
+    quantity: 80,
+    date: '2026-06-01',
+    storageLocation: 'Silo A, Bay 1',
+    notes: 'Premium brewery Grade A storage request.'
+  },
+  {
+    id: 'prov-dep-2',
+    providerName: 'Bale Farmers Syndicate',
+    grainType: 'Sinde',
+    quantity: 150,
+    date: '2026-06-04',
+    storageLocation: 'Silo C, Main Dome',
+    notes: 'Consignment load from spring harvest.'
+  },
+  {
+    id: 'prov-dep-3',
+    providerName: 'Gonder Agro Exporters',
+    grainType: 'Atar',
+    quantity: 120,
+    date: '2026-06-08',
+    storageLocation: 'Warehouse B, Section 1',
+    notes: 'Stored on behalf under safe keeping contract.'
+  }
+];
+
